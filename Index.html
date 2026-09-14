@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<base target="_top">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pengajuan Beasiswa — Duta Teladan by Universitas STEKOM</title>
+<style>
+  :root{
+    --pink:#e6147f;--pink-dark:#c10f6a;--pink-deep:#9c0a52;--ink:#2a0a1c;--white:#fff;
+    --wa:#25D366;--wa-dark:#128C7E;
+    --ok:#10803f;--ok-bg:#e7f8ee;--no:#c0392b;--no-bg:#fdeaea;
+    --amber:#8a5a00;--amber-bg:#fdf3dd;--line:#f0e3eb;--muted:#9a6b81;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;min-height:100vh;color:var(--white);
+       position:relative;overflow-x:hidden;background:var(--pink);padding-bottom:0}
+  body.ada-rel{padding-bottom:196px}
+  .bg{position:fixed;inset:0;z-index:-3;background:
+      radial-gradient(circle at 18% 22%, rgba(255,255,255,.12) 0 20%, transparent 21%),
+      radial-gradient(circle at 92% 10%, rgba(0,0,0,.14) 0 5%, transparent 6%),
+      linear-gradient(135deg,var(--pink) 0%,var(--pink-dark) 55%,var(--pink-deep) 100%)}
+  .bg::after{content:"";position:absolute;inset:0;
+      background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),
+                       linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);
+      background-size:48px 48px;
+      -webkit-mask-image:linear-gradient(180deg,transparent,#000 30%,#000 70%,transparent);
+      mask-image:linear-gradient(180deg,transparent,#000 30%,#000 70%,transparent)}
+  .overlay{position:fixed;inset:0;z-index:-2;background:linear-gradient(180deg,rgba(0,0,0,.05),rgba(42,10,28,.55))}
+  .particles{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+  .particles span{position:absolute;display:block;color:rgba(255,255,255,.28);font-size:14px;animation:rise linear infinite}
+  @keyframes rise{0%{transform:translateY(110vh) scale(.6) rotate(0);opacity:0}10%,90%{opacity:1}
+                  100%{transform:translateY(-10vh) scale(1.1) rotate(220deg);opacity:0}}
+
+  .wrap{max-width:700px;margin:0 auto;padding:44px 20px 56px}
+  header{text-align:center;margin-bottom:26px;animation:drop .7s ease both}
+  @keyframes drop{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:none}}
+  .eyebrow{letter-spacing:.35em;text-transform:uppercase;font-size:.7rem;font-weight:600;opacity:.9;margin-bottom:8px}
+  .logo{font-size:clamp(1.9rem,6.4vw,2.9rem);font-weight:800;line-height:1;text-transform:uppercase;
+        letter-spacing:.02em;display:flex;align-items:center;justify-content:center;gap:.16em;
+        text-shadow:0 4px 18px rgba(0,0,0,.25)}
+  .logo .star{display:inline-block;animation:twinkle 2.4s ease-in-out infinite}
+  @keyframes twinkle{0%,100%{transform:scale(1) rotate(0);filter:drop-shadow(0 0 4px rgba(255,255,255,.5))}
+                     50%{transform:scale(1.18) rotate(18deg);filter:drop-shadow(0 0 14px rgba(255,255,255,.95))}}
+  .sub{margin-top:9px;font-size:.95rem;font-weight:600;opacity:.95}
+
+  /* ---------- penunjuk langkah ---------- */
+  .langkah{display:flex;gap:6px;margin-bottom:16px}
+  .langkah div{flex:1;font-size:.66rem;font-weight:700;text-align:center;padding:8px 4px;border-radius:8px;
+       background:rgba(255,255,255,.14);color:rgba(255,255,255,.66);letter-spacing:.04em;text-transform:uppercase;
+       border:1px solid rgba(255,255,255,.16)}
+  .langkah div.kini{background:#fff;color:var(--pink-deep);border-color:#fff}
+  .langkah div.selesai{background:rgba(255,255,255,.3);color:#fff}
+
+  .card{background:rgba(255,255,255,.13);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+        border:1px solid rgba(255,255,255,.25);border-radius:22px;padding:28px 24px;
+        box-shadow:0 24px 60px rgba(60,0,30,.4);animation:drop .7s .1s ease both}
+  .card h2{font-size:1.14rem;font-weight:700;margin-bottom:5px}
+  .card p.lead{font-size:.88rem;opacity:.9;margin-bottom:20px;line-height:1.55}
+  label{display:block;font-size:.78rem;font-weight:600;margin-bottom:7px;opacity:.95}
+  .inwrap{position:relative}
+  .inwrap svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);opacity:.55}
+  input{width:100%;padding:14px 16px;border-radius:13px;border:none;font-size:1rem;color:var(--ink);
+        background:#fff;outline:none;box-shadow:0 4px 14px rgba(0,0,0,.12);transition:.2s;font-family:inherit}
+  .inwrap input{padding-left:44px}
+  input:focus{box-shadow:0 0 0 3px rgba(255,255,255,.55),0 6px 18px rgba(0,0,0,.18)}
+  input::placeholder{color:#b07a93}
+  button{font-family:inherit;font-weight:700;border:none;cursor:pointer;transition:.2s}
+  .cek{width:100%;margin-top:16px;padding:15px;border-radius:13px;background:var(--ink);color:#fff;
+       font-size:1rem;letter-spacing:.02em;box-shadow:0 8px 22px rgba(0,0,0,.28)}
+  .cek:hover:not(:disabled){background:#000;transform:translateY(-2px)}
+  .cek:disabled{opacity:.6;cursor:not-allowed;transform:none}
+  .hint{font-size:.76rem;opacity:.78;margin-top:15px;text-align:center;line-height:1.5}
+
+  /* ---------- kartu putih ---------- */
+  .putih{margin-top:20px;border-radius:19px;padding:24px;background:#fff;color:var(--ink);
+         box-shadow:0 16px 40px rgba(40,0,20,.3);position:relative;overflow:hidden;
+         animation:fade .4s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .putih::before{content:"";position:absolute;top:0;left:0;right:0;height:5px;
+                 background:linear-gradient(90deg,var(--pink),#f77fb8)}
+  .putih.ok::before{background:linear-gradient(90deg,#10803f,#39c97a)}
+  .putih.no::before{background:linear-gradient(90deg,#c0392b,#e57373)}
+  .putih h3{font-size:1.06rem;font-weight:800;letter-spacing:-.01em}
+  .putih .ket{font-size:.85rem;color:var(--muted);margin-top:3px;line-height:1.5}
+  .badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:999px;font-size:.72rem;
+         font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:14px}
+  .badge.ok{background:var(--ok-bg);color:var(--ok)}
+  .badge.am{background:var(--amber-bg);color:var(--amber)}
+
+  .rincian{background:#faf5f8;border:1px solid var(--line);border-radius:13px;padding:13px 15px;margin-top:14px}
+  .rincian .br{display:flex;justify-content:space-between;gap:12px;font-size:.85rem;padding:5px 0;color:#5c3a4c}
+  .rincian .br b{color:var(--ink);white-space:nowrap}
+  .rincian .br.tot{border-top:1px dashed #e3ccd9;margin-top:6px;padding-top:9px;font-weight:800;color:var(--ink)}
+
+  /* ---------- kartu beasiswa, gaya voucher ---------- */
+  .daftar{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+  .vc{position:relative;display:flex;align-items:stretch;background:#fff;border:2px solid var(--line);
+      border-radius:14px;overflow:hidden;transition:.18s;cursor:pointer}
+  .vc:hover{border-color:#f5c3dd}
+  .vc.on{border-color:var(--pink);background:#fff7fb;box-shadow:0 6px 18px rgba(230,20,127,.16)}
+  .vc.mati{opacity:.6;cursor:not-allowed;background:#faf7f9}
+  .vc .stub{width:13px;flex:none;background:repeating-linear-gradient(180deg,var(--line) 0 6px,transparent 6px 12px)}
+  .vc.on .stub{background:repeating-linear-gradient(180deg,var(--pink) 0 6px,transparent 6px 12px)}
+  .vc .tick{width:42px;flex:none;display:flex;align-items:center;justify-content:center}
+  .vc input[type=checkbox]{width:21px;height:21px;accent-color:var(--pink);cursor:pointer;box-shadow:none;padding:0}
+  .vc .isi{flex:1;min-width:0;padding:13px 14px 13px 0}
+  .vc .no{display:block;font-family:ui-monospace,'Courier New',monospace;font-size:.79rem;font-weight:700;
+          color:var(--pink-dark);word-break:break-all}
+  .vc .nm{display:block;font-size:.8rem;color:var(--muted);margin-top:2px}
+  .vc .rp{display:block;font-weight:800;font-size:1.08rem;margin-top:6px}
+  .tag{display:inline-block;font-size:.64rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;
+       padding:3px 9px;border-radius:999px;margin-top:6px;margin-right:6px}
+  .t-siap{background:var(--ok-bg);color:var(--ok)}
+  .t-proses{background:var(--amber-bg);color:var(--amber)}
+  .t-selesai{background:#eceff4;color:#64708a}
+  .vc a{font-size:.76rem;color:var(--pink-dark);font-weight:700;text-decoration:none}
+
+  /* ---------- gerbang verifikasi ---------- */
+  .gerbang{text-align:center}
+  .gerbang .ic{font-size:2.1rem;margin-bottom:6px}
+  .gerbang .nm{font-size:1.05rem;font-weight:800;color:var(--pink-dark);margin:8px 0 3px}
+  .gerbang .isian{display:flex;gap:9px;margin-top:14px}
+  .gerbang input{flex:1;font-family:ui-monospace,monospace;font-size:1.3rem;letter-spacing:.34em;
+                 text-align:center;font-weight:800;border:2px solid var(--line);box-shadow:none}
+  .gerbang input:focus{border-color:var(--pink);box-shadow:0 0 0 3px rgba(230,20,127,.15)}
+  .gerbang .buka{padding:14px 22px;border-radius:13px;background:var(--pink);color:#fff;font-size:.95rem}
+  .gerbang .buka:hover{background:var(--pink-dark)}
+
+  /* ---------- formulir ---------- */
+  .fg{margin-bottom:13px}
+  .fg label{color:var(--ink);opacity:1;font-size:.78rem;margin-bottom:5px}
+  .fg input{border:1.5px solid var(--line);box-shadow:none;padding:12px 13px;font-size:.94rem}
+  .fg input:focus{border-color:var(--pink);box-shadow:0 0 0 3px rgba(230,20,127,.14)}
+  .fg input[readonly]{background:#faf5f8;color:#6b4a5b}
+  .fg .bantu{font-size:.72rem;color:var(--muted);margin-top:4px}
+  .f2{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+  @media(max-width:480px){.f2{grid-template-columns:1fr}}
+  .wajib{color:var(--pink)}
+
+  /* ---------- syarat dan ketentuan ---------- */
+  .sk{border:1.5px solid var(--line);border-radius:13px;margin:18px 0 14px;overflow:hidden;background:#fff}
+  .sk.dibuka{border-color:var(--pink)}
+  .sk .kepala{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 15px;
+              background:#fdf0f7;cursor:pointer;user-select:none}
+  .sk .kepala .jd{font-size:.86rem;font-weight:800;color:var(--pink-deep)}
+  .sk .kepala .st{font-size:.7rem;color:var(--muted);font-weight:600}
+  .sk .kepala .pn{transition:.2s;color:var(--pink-dark);font-size:.8rem;font-weight:800}
+  .sk.dibuka .kepala .pn{transform:rotate(180deg)}
+  .sk .isi{max-height:0;overflow:hidden;transition:max-height .3s ease}
+  .sk.dibuka .isi{max-height:900px;overflow-y:auto}
+  .sk ol{margin:0;padding:14px 18px 16px 34px}
+  .sk li{font-size:.83rem;line-height:1.6;color:#4a3340;margin-bottom:9px}
+  .sk li:last-child{margin-bottom:0}
+  .sk .versi{padding:0 18px 14px;font-size:.7rem;color:var(--muted)}
+
+  .pernyataan{display:flex;gap:11px;align-items:flex-start;border:2px solid var(--line);border-radius:13px;
+              padding:14px;margin-bottom:15px;cursor:pointer;background:#fffdf9;transition:.18s}
+  .pernyataan.on{border-color:var(--ok);background:var(--ok-bg)}
+  .pernyataan.terkunci{opacity:.55;cursor:not-allowed}
+  .pernyataan input{width:21px;height:21px;flex:none;margin-top:1px;accent-color:var(--ok);
+                    padding:0;box-shadow:none}
+  .pernyataan span{font-size:.85rem;line-height:1.55;color:#4a3340}
+  .pernyataan b{color:var(--ink)}
+
+  /* ---------- rel akumulasi ---------- */
+  .rel{position:fixed;left:0;right:0;bottom:0;z-index:40;background:var(--ink);color:#fff;
+       padding:13px 0 15px;box-shadow:0 -6px 24px rgba(42,10,28,.42);display:none}
+  .rel.on{display:block}
+  .rel .in{max-width:700px;margin:0 auto;padding:0 20px}
+  .rel-atas{display:flex;justify-content:space-between;align-items:baseline;font-size:.75rem;opacity:.8}
+  .rel-nilai{font-size:1.5rem;font-weight:800;letter-spacing:-.02em;margin-top:1px}
+  .bar{position:relative;height:9px;background:rgba(255,255,255,.16);border-radius:6px;margin:9px 0 11px;overflow:hidden}
+  .bar i{position:absolute;top:0;left:0;height:100%;border-radius:6px;background:var(--pink);transition:width .28s}
+  .rel .aju{width:100%;padding:15px;border-radius:13px;background:var(--pink);color:#fff;font-size:1rem;font-weight:800}
+  .rel .aju:hover:not(:disabled){background:var(--pink-dark)}
+  .rel .aju:disabled{background:#5a3a4a;color:#a58e99;cursor:not-allowed}
+  .rel-nota{font-size:.72rem;opacity:.8;margin-top:8px;text-align:center;line-height:1.45}
+
+  .pesan{border-radius:11px;padding:12px 14px;font-size:.85rem;line-height:1.5;margin-bottom:13px}
+  .p-salah{background:var(--no-bg);color:var(--no);border:1px solid #f6cdcd}
+  .p-benar{background:var(--ok-bg);color:var(--ok);border:1px solid #b9e2d0}
+  .p-info{background:#eef4fd;color:#1d4e89;border:1px solid #cfe0f5}
+
+  .kosong{text-align:center;padding:10px 0}
+  .kosong .big{font-size:2.4rem;margin-bottom:8px}
+  .kosong .wa-link{display:inline-block;margin-top:13px;color:var(--wa-dark);font-weight:700;
+                   text-decoration:none;font-size:.85rem}
+
+  .tiket{font-family:ui-monospace,'Courier New',monospace;font-size:1.14rem;font-weight:700;
+         background:#faf5f8;border:1.5px dashed var(--pink);border-radius:12px;padding:13px;
+         margin:13px 0;text-align:center;word-break:break-all}
+  .tbl-wa{display:flex;align-items:center;justify-content:center;gap:9px;background:var(--wa);color:#fff;
+          padding:14px;border-radius:12px;text-decoration:none;font-weight:700;font-size:.95rem}
+  .tbl-wa:hover{background:var(--wa-dark)}
+
+  .spinner{display:inline-block;width:15px;height:15px;border:2px solid rgba(255,255,255,.4);
+           border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;
+           vertical-align:-2px;margin-right:7px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  footer{text-align:center;margin-top:38px;font-size:.76rem;opacity:.75;line-height:1.6}
+
+  /* ---------- bantuan WhatsApp ---------- */
+  .wa-fab{position:fixed;right:22px;bottom:22px;width:60px;height:60px;border-radius:50%;background:var(--wa);
+          display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:60;
+          box-shadow:0 8px 24px rgba(18,140,126,.5);animation:pop .5s .6s both}
+  body.ada-rel .wa-fab{bottom:206px}
+  @keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
+  .wa-fab::after{content:"";position:absolute;inset:0;border-radius:50%;background:var(--wa);z-index:-1;
+                 animation:pulse 2s ease-out infinite}
+  @keyframes pulse{0%{transform:scale(1);opacity:.6}100%{transform:scale(1.8);opacity:0}}
+  .wa-fab svg{width:32px;height:32px}
+  .wa-pop{position:fixed;right:22px;bottom:92px;width:300px;max-width:calc(100vw - 44px);background:#fff;
+          color:var(--ink);border-radius:18px;box-shadow:0 18px 50px rgba(0,0,0,.35);z-index:61;overflow:hidden;
+          transform:translateY(20px) scale(.92);opacity:0;pointer-events:none;transition:.25s cubic-bezier(.2,.8,.3,1)}
+  body.ada-rel .wa-pop{bottom:276px}
+  .wa-pop.show{transform:translateY(0) scale(1);opacity:1;pointer-events:auto}
+  .wa-pop .top{background:var(--wa-dark);color:#fff;padding:15px 17px;display:flex;align-items:center;gap:11px;position:relative}
+  .wa-pop .top .av{width:40px;height:40px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;flex:none}
+  .wa-pop .top .av svg{width:24px;height:24px}
+  .wa-pop .top .t{font-weight:700;font-size:.92rem;line-height:1.2}
+  .wa-pop .top .s{font-size:.7rem;opacity:.85}
+  .wa-pop .body{padding:17px}
+  .wa-pop .bubble{background:#f3eef1;border-radius:4px 14px 14px 14px;padding:12px 14px;font-size:.86rem;
+                  line-height:1.5;color:#4a3340}
+  .wa-pop .go{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:15px;padding:13px;
+              background:var(--wa);color:#fff;border-radius:12px;text-decoration:none;font-weight:700;font-size:.9rem}
+  .wa-pop .go:hover{background:var(--wa-dark)}
+  .wa-pop .close{position:absolute;top:13px;right:13px;background:rgba(255,255,255,.25);border:none;color:#fff;
+                 width:24px;height:24px;border-radius:50%;cursor:pointer;font-size:14px;line-height:1;padding:0}
+  .sembunyi{display:none!important}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<div class="overlay"></div>
+<div class="particles" id="particles"></div>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow" id="eyebrow">Build Your Character</div>
+    <div class="logo" id="logo">Duta&nbsp;Telad<span class="star">&#9733;</span>n</div>
+    <div class="sub" id="subJudul">By Universitas STEKOM</div>
+  </header>
+
+  <div class="langkah">
+    <div id="lk1" class="kini">1 &middot; Cari</div>
+    <div id="lk2">2 &middot; Pilih</div>
+    <div id="lk3">3 &middot; Ajukan</div>
+  </div>
+
+  <div class="card" id="kartuCari">
+    <h2 id="judulKartu">Pengajuan Beasiswa Sertifikat</h2>
+    <p class="lead">Masukkan <strong>Nomor Sertifikat</strong> atau <strong>Nama Lengkap</strong>. Seluruh beasiswa atas nama Anda akan ditampilkan untuk diajukan.</p>
+    <label for="q">Nomor Sertifikat / Nama Lengkap</label>
+    <div class="inwrap">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b07a93" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="q" type="text" placeholder="Masukan Nomor Sertifikat / Nama Anda" autocomplete="off">
+    </div>
+    <button class="cek" id="btnCari">Cari Beasiswa Saya</button>
+    <p class="hint">Pencarian hanya dapat dilakukan menggunakan Nama atau Nomor Sertifikat yang terdaftar.</p>
+  </div>
+
+  <div id="wadahPesan"></div>
+  <div id="wadahHasil"></div>
+  <div id="wadahForm"></div>
+
+  <footer id="kaki">&copy; 2026 Duta Teladan &mdash; Universitas STEKOM<br>Sistem Verifikasi &amp; Pengajuan Beasiswa</footer>
+</div>
+
+<div class="rel" id="rel">
+  <div class="in">
+    <div class="rel-atas"><span id="relKiri">Beasiswa dipilih</span><span id="relKanan"></span></div>
+    <div class="rel-nilai" id="relNilai">Rp0</div>
+    <div class="bar"><i id="barIsi"></i></div>
+    <button class="aju" id="btnLanjut" disabled>Pilih beasiswa dulu</button>
+    <p class="rel-nota" id="relNota"></p>
+  </div>
+</div>
+
+<div class="wa-pop" id="waPop">
+  <div class="top">
+    <div class="av"><svg viewBox="0 0 24 24" fill="#25D366"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.51 5.26l-.999 3.648 3.978-1.045z"/></svg></div>
+    <div>
+      <div class="t">Admin Duta Teladan</div>
+      <div class="s">&#9679; Online &middot; Biasanya membalas cepat</div>
+    </div>
+    <button class="close" id="waClose">&times;</button>
+  </div>
+  <div class="body">
+    <div class="bubble" id="waBubble">Halo! &#128075; Ada kendala saat mengajukan beasiswa atau butuh bantuan lain? Tim admin siap membantu Anda.</div>
+    <a class="go" id="waGo" href="#" target="_blank" rel="noopener">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="#fff"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24z"/></svg>
+      Chat via WhatsApp
+    </a>
+  </div>
+</div>
+
+<div class="wa-fab" id="waFab" title="Butuh bantuan?">
+  <svg viewBox="0 0 24 24" fill="#fff"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.51 5.26l-.999 3.648 3.978-1.045zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+</div>
+
+<script>
+/* ============================================================
+   Alamat Web App. Biarkan kosong kalau halaman ini disajikan
+   langsung oleh Apps Script. Isi kalau dihosting sendiri.
+   ============================================================ */
+const WEB_APP_URL = '';
+
+const LEWAT_GS = (typeof google !== 'undefined' && google.script && google.script.run);
+
+let KONFIG = {
+  waAdmin: '628888999920', plafonS1: 7000000, plafonS2: 0,
+  teksPernyataan: 'Saya menyatakan data yang saya masukkan adalah benar dan dapat dipertanggungjawabkan.',
+  nikWajib: true, panjangNik: 16, nimWajib: false,
+  syaratKetentuan: { versi: '', judul: 'Syarat dan Ketentuan', butir: [], wajibDibuka: true }
+};
+let HASIL = null, PILIH = {}, SK_DIBUKA = false;
+
+const el = id => document.getElementById(id);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c =>
+  ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c]));
+const rp = n => 'Rp' + Number(n || 0).toLocaleString('id-ID');
+
+/* ---------- hiasan ---------- */
+(function(){
+  const p = el('particles'), ch = ['\u2605','\u2726','\u2727','\u00B7'];
+  for(let i=0;i<18;i++){
+    const s = document.createElement('span');
+    s.textContent = ch[i%ch.length];
+    s.style.left = Math.random()*100+'%';
+    s.style.fontSize = (8+Math.random()*15)+'px';
+    s.style.animationDuration = (10+Math.random()*12)+'s';
+    s.style.animationDelay = (-Math.random()*16)+'s';
+    p.appendChild(s);
+  }
+})();
+
+/* ---------- jembatan ---------- */
+function panggilGet(aksi, param){
+  if(LEWAT_GS){
+    return new Promise((ya, tidak) => {
+      const r = google.script.run.withSuccessHandler(ya)
+        .withFailureHandler(e => tidak(new Error(e.message)));
+      if(aksi === 'cari') r.apiCari(param.keyword, param.pembuka || ''); else r.apiKonfig();
+    });
+  }
+  const q = new URLSearchParams(Object.assign({ aksi: aksi }, param || {}));
+  return fetch(WEB_APP_URL + '?' + q.toString()).then(r => r.json());
+}
+function panggilPost(body){
+  if(LEWAT_GS){
+    return new Promise((ya, tidak) => {
+      google.script.run.withSuccessHandler(ya)
+        .withFailureHandler(e => tidak(new Error(e.message))).apiAjukan(body);
+    });
+  }
+  return fetch(WEB_APP_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(body)
+  }).then(r => r.json());
+}
+
+function alamatWa(pesan){
+  return 'https://api.whatsapp.com/send/?phone=' + KONFIG.waAdmin + '&text=' + encodeURIComponent(pesan);
+}
+function pesan(t, j){
+  el('wadahPesan').innerHTML = t ? '<div class="putih ' + (j === 'salah' ? 'no' : '') + '" style="padding:16px 20px">' +
+    '<div class="pesan p-' + j + '" style="margin:0">' + t + '</div></div>' : '';
+  if(t) window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function langkah(n){
+  [1,2,3].forEach(i => {
+    el('lk'+i).className = i < n ? 'selesai' : (i === n ? 'kini' : '');
+  });
+}
+
+/* ---------- pemuatan awal ---------- */
+async function mulai(){
+  el('waGo').href = alamatWa('Halo admin, saya butuh bantuan soal pengajuan beasiswa.');
+  try{
+    const k = await panggilGet('konfig', {});
+    if(k && k.success){
+      KONFIG = Object.assign(KONFIG, k);
+      if(k.judul){ el('judulKartu').textContent = k.judul; document.title = k.judul + ' — Duta Teladan'; }
+      if(k.subJudul) el('subJudul').textContent = k.subJudul;
+      if(k.eyebrow) el('eyebrow').textContent = k.eyebrow;
+      if(k.namaProgram) gambarLogo(k.namaProgram);
+      const w = k.warna || {}, akar = document.documentElement.style;
+      if(w.utama) akar.setProperty('--pink', w.utama);
+      if(w.gelap) akar.setProperty('--pink-dark', w.gelap);
+      if(w.pekat) akar.setProperty('--pink-deep', w.pekat);
+      el('waGo').href = alamatWa('Halo admin, saya butuh bantuan soal pengajuan beasiswa.');
+    }
+  }catch(e){ /* halaman tetap jalan dengan nilai bawaan */ }
+}
+
+/** Tanda * di nama program jadi bintang berkilau. */
+function gambarLogo(teks){
+  const s = String(teks), i = s.indexOf('*');
+  el('logo').innerHTML = i < 0 ? esc(s)
+    : esc(s.slice(0, i)) + '<span class="star">&#9733;</span>' + esc(s.slice(i + 1));
+}
+
+/* ---------- langkah 1: cari ---------- */
+async function cari(){
+  const q = el('q').value.trim();
+  if(q.length < 3){ pesan('Ketik minimal 3 karakter.', 'salah'); el('q').focus(); return; }
+
+  const b = el('btnCari');
+  b.disabled = true; b.innerHTML = '<span class="spinner"></span>Memeriksa...';
+  pesan(''); el('wadahForm').innerHTML = ''; sembunyikanRel(); tutupPop();
+
+  try{
+    const h = await panggilGet('cari', { keyword: q });
+    if(!h || !h.success){
+      if(h && h.perlu_verifikasi){ gambarGerbang(h, q, h.error); return; }
+      el('wadahHasil').innerHTML =
+        '<div class="putih no"><div class="kosong"><div class="big">\uD83D\uDD0D</div>' +
+        '<strong>' + esc((h && h.error) || 'Tidak ada sertifikat yang sesuai.') + '</strong><br>' +
+        '<span style="font-size:.85rem;color:var(--muted)">Periksa kembali ejaan Nama atau Nomor Sertifikat Anda.</span>' +
+        '<br><a class="wa-link" href="' + alamatWa('Halo admin, saya mencari "' + q + '" tetapi tidak ditemukan.') +
+        '" target="_blank" rel="noopener">\uD83D\uDCAC Hubungi Admin untuk bantuan</a></div></div>';
+      bukaPop('Sepertinya ada kendala. Tim admin bisa membantu mengecekkan langsung.');
+      langkah(1);
+      return;
+    }
+    if(h.perlu_verifikasi){ gambarGerbang(h, q); return; }
+    HASIL = h; PILIH = {}; gambarHasil(); langkah(2);
+  }catch(e){
+    pesan('Tidak dapat terhubung ke sistem. Coba lagi sebentar.', 'salah');
+  }finally{
+    b.disabled = false; b.textContent = 'Cari Beasiswa Saya';
+  }
+}
+
+/* ---------- gerbang verifikasi ----------
+   Halaman ini terbuka untuk umum. Kalau nama saja sudah membuka data,
+   siapa pun bisa melihat nominal beasiswa orang lain. Mencari lewat
+   nomor sertifikat melewati langkah ini, karena mengetahui nomornya
+   sudah jadi bukti tersendiri. */
+function gambarGerbang(h, kataKunci, salah){
+  el('wadahHasil').innerHTML =
+    '<div class="putih"><div class="gerbang">' +
+      '<div class="ic">\uD83D\uDD12</div>' +
+      '<h3>Buktikan ini Anda</h3>' +
+      '<div class="nm">' + esc(h.nama_tersamar || '') + '</div>' +
+      '<div class="ket">' + (h.jumlah ? h.jumlah + ' beasiswa atas nama ini. ' : '') +
+        esc(h.petunjuk || '') + '</div>' +
+      (salah ? '<div class="pesan p-salah" style="margin-top:13px;text-align:left">' + esc(salah) + '</div>' : '') +
+      '<div class="isian">' +
+        '<input type="text" id="f_pembuka" inputmode="numeric" maxlength="' + (h.digit || 4) +
+          '" placeholder="' + new Array((h.digit || 4) + 1).join('\u2022') + '" autocomplete="off">' +
+        '<button class="buka" id="btnBuka">Buka</button>' +
+      '</div>' +
+      '<p class="ket" style="margin-top:11px;font-size:.76rem">Kalau Anda tahu nomor sertifikatnya, ' +
+        'cari langsung memakai nomor itu dan langkah ini dilewati.</p>' +
+    '</div></div>';
+  langkah(1);
+  const inp = el('f_pembuka');
+  inp.focus();
+  const buka = () => bukaGerbang(kataKunci, h);
+  el('btnBuka').addEventListener('click', buka);
+  inp.addEventListener('keydown', e => { if(e.key === 'Enter') buka(); });
+}
+
+async function bukaGerbang(kataKunci, hLama){
+  const kode = el('f_pembuka').value.trim();
+  if(!kode){ el('f_pembuka').focus(); return; }
+  const b = el('btnBuka');
+  b.disabled = true; b.innerHTML = '<span class="spinner"></span>';
+  try{
+    const h = await panggilGet('cari', { keyword: kataKunci, pembuka: kode });
+    if(!h || !h.success){
+      gambarGerbang(Object.assign({}, hLama, h || {}), kataKunci, (h && h.error) || 'Gagal membuka.');
+      return;
+    }
+    HASIL = h; PILIH = {}; gambarHasil(); langkah(2);
+  }catch(e){
+    gambarGerbang(hLama, kataKunci, 'Tidak dapat terhubung. Coba lagi.');
+  }
+}
+
+/* ---------- langkah 2: pilih ---------- */
+function gambarHasil(){
+  const h = HASIL;
+  const bisa = h.data.filter(d => d.bisa_diajukan).length;
+
+  let s = '<div class="putih ok">';
+  s += '<span class="badge ok">\u2714 ' + h.jumlah + ' beasiswa ditemukan</span>';
+  s += '<h3>' + esc(h.nama) + '</h3>';
+  s += '<p class="ket">' + (bisa ? 'Centang beasiswa yang mau diajukan. Boleh lebih dari satu.'
+                                 : 'Semua beasiswa Anda sudah pernah diajukan.') + '</p>';
+
+  s += '<div class="rincian">' +
+       '<div class="br"><span>Total hak beasiswa</span><b>' + rp(h.total_nominal) + '</b></div>' +
+       '<div class="br"><span>Bagian jenjang S1</span><b>' + rp(h.nominal_s1) + '</b></div>' +
+       (h.nominal_s2 > 0
+         ? '<div class="br"><span>Bagian jenjang S2, tidak hangus</span><b>' + rp(h.nominal_s2) + '</b></div>'
+         : '') +
+       '</div>';
+
+  s += '<div class="daftar">';
+  h.data.forEach((d, i) => {
+    const tag = d.bisa_diajukan
+      ? '<span class="tag t-siap">Bisa diajukan</span>'
+      : (String(d.status_klaim) === 'aktif'
+          ? '<span class="tag t-selesai">Sudah aktif</span>'
+          : '<span class="tag t-proses">' + esc(String(d.status_klaim).replace(/_/g,' ')) + '</span>');
+    s += '<label class="vc' + (d.bisa_diajukan ? '' : ' mati') + '" id="vc' + i + '">' +
+           '<span class="stub"></span>' +
+           '<span class="tick"><input type="checkbox" id="cb' + i + '"' + (d.bisa_diajukan ? '' : ' disabled') + '></span>' +
+           '<span class="isi">' +
+             '<span class="no">' + esc(d.no_beasiswa) + '</span>' +
+             '<span class="nm">' + esc(d.nama) + '</span>' +
+             '<span class="rp">' + rp(d.nominal) + '</span>' + tag +
+             (d.link_sertifikat
+               ? '<a href="' + esc(d.link_sertifikat) + '" target="_blank" rel="noopener" onclick="event.stopPropagation()">Lihat sertifikat</a>'
+               : '') +
+           '</span>' +
+         '</label>';
+  });
+  s += '</div></div>';
+
+  el('wadahHasil').innerHTML = s;
+  h.data.forEach((d, i) => {
+    const c = el('cb' + i);
+    if(!c) return;
+    c.addEventListener('change', () => {
+      if(c.checked) PILIH[i] = true; else delete PILIH[i];
+      el('vc' + i).classList.toggle('on', c.checked);
+      hitung();
+    });
+  });
+  hitung();
+}
+
+function hitung(){
+  let total = 0, n = 0;
+  Object.keys(PILIH).forEach(i => { total += Number(HASIL.data[i].nominal || 0); n++; });
+
+  el('relKiri').textContent = n ? n + ' beasiswa dipilih' : 'Belum ada yang dipilih';
+  el('relKanan').textContent = 'Total hak ' + rp(HASIL.total_nominal);
+  el('relNilai').textContent = rp(total);
+  el('barIsi').style.width = HASIL.total_nominal
+    ? Math.min(100, total / HASIL.total_nominal * 100) + '%' : '0%';
+
+  const b = el('btnLanjut');
+  b.disabled = n === 0;
+  b.textContent = n === 0 ? 'Pilih beasiswa dulu' : 'Lanjut Isi Data \u2014 ' + rp(total);
+
+  el('relNota').textContent = n === 0
+    ? 'Boleh memilih lebih dari satu beasiswa sekaligus.'
+    : (HASIL.nominal_s2 > 0
+        ? 'Bagian di atas plafon S1 ' + rp(KONFIG.plafonS1) + ' tidak hangus, tercatat sebagai hak jenjang S2.'
+        : 'Total yang akan diajukan ' + rp(total) + '.');
+  tampilkanRel();
+}
+function tampilkanRel(){ el('rel').classList.add('on'); document.body.classList.add('ada-rel'); }
+function sembunyikanRel(){ el('rel').classList.remove('on'); document.body.classList.remove('ada-rel'); }
+
+/* ---------- langkah 3: formulir ---------- */
+function bukaForm(){
+  const dipilih = Object.keys(PILIH).map(i => HASIL.data[i]);
+  const total = dipilih.reduce((a, d) => a + Number(d.nominal || 0), 0);
+  const sk = KONFIG.syaratKetentuan || { butir: [] };
+  SK_DIBUKA = !(sk.wajibDibuka && sk.butir && sk.butir.length);
+
+  el('wadahForm').innerHTML =
+    '<div class="putih" id="kartuForm">' +
+      '<h3>Data Pengajuan</h3>' +
+      '<p class="ket">Nama diambil dari data sertifikat dan tidak dapat diubah.</p>' +
+
+      '<div class="rincian">' +
+        dipilih.map(d => '<div class="br"><span>' + esc(d.no_beasiswa) + '</span><b>' + rp(d.nominal) + '</b></div>').join('') +
+        '<div class="br tot"><span>Total diajukan</span><b>' + rp(total) + '</b></div>' +
+      '</div>' +
+
+      '<div id="pesanForm" style="margin-top:15px"></div>' +
+
+      '<div class="fg" style="margin-top:4px"><label>Nama Lengkap</label>' +
+        '<input type="text" id="f_nama" value="' + esc(HASIL.nama) + '" readonly>' +
+        '<div class="bantu">Terkunci. Hubungi admin bila ejaannya keliru.</div></div>' +
+      '<div class="f2">' +
+        '<div class="fg"><label>Nomor WhatsApp <span class="wajib">*</span></label>' +
+          '<input type="tel" id="f_wa" inputmode="tel" placeholder="0812..."></div>' +
+        '<div class="fg"><label>Email <span class="wajib">*</span></label>' +
+          '<input type="email" id="f_email" inputmode="email" placeholder="nama@email.com"></div>' +
+      '</div>' +
+      '<div class="f2">' +
+        '<div class="fg"><label>NIK ' + (KONFIG.nikWajib ? '<span class="wajib">*</span>' : '') + '</label>' +
+          '<input type="text" id="f_nik" inputmode="numeric" maxlength="' + KONFIG.panjangNik + '" placeholder="' + KONFIG.panjangNik + ' digit sesuai KTP">' +
+          '</div>' +
+        '<div class="fg"><label>NIM ' + (KONFIG.nimWajib ? '<span class="wajib">*</span>' : '') + '</label>' +
+          '<input type="text" id="f_nim" placeholder="Kosongkan bila belum mahasiswa">' +
+          '<div class="bantu">Isi bila Anda sudah berstatus mahasiswa.</div></div>' +
+      '</div>' +
+
+      gambarSK(sk) +
+
+      '<label class="pernyataan' + (SK_DIBUKA ? '' : ' terkunci') + '" id="kotakPernyataan">' +
+        '<input type="checkbox" id="f_pernyataan"' + (SK_DIBUKA ? '' : ' disabled') + '>' +
+        '<span>' + esc(KONFIG.teksPernyataan) +
+          (sk.butir && sk.butir.length ? ' <b>Saya juga telah membaca dan menyetujui Syarat dan Ketentuan di atas.</b>' : '') +
+        '</span>' +
+      '</label>' +
+
+      '<button class="cek" id="btnAjukan" style="background:var(--pink);margin-top:0" disabled>' +
+        (SK_DIBUKA ? 'Centang pernyataan dulu' : 'Baca Syarat dan Ketentuan dulu') + '</button>' +
+    '</div>';
+
+  if(sk.butir && sk.butir.length){
+    el('skKepala').addEventListener('click', () => {
+      const p = el('skPanel');
+      const buka = !p.classList.contains('dibuka');
+      p.classList.toggle('dibuka', buka);
+      el('skStatus').textContent = buka ? 'Sudah dibaca' : 'Ketuk untuk membaca';
+      if(buka && !SK_DIBUKA){
+        SK_DIBUKA = true;
+        el('f_pernyataan').disabled = false;
+        el('kotakPernyataan').classList.remove('terkunci');
+        el('btnAjukan').textContent = 'Centang pernyataan dulu';
+      }
+    });
+  }
+
+  const cp = el('f_pernyataan');
+  cp.addEventListener('change', () => {
+    el('kotakPernyataan').classList.toggle('on', cp.checked);
+    const t = el('btnAjukan');
+    t.disabled = !cp.checked;
+    t.textContent = cp.checked ? 'Ajukan Sekarang \u2014 ' + rp(total) : 'Centang pernyataan dulu';
+  });
+  el('btnAjukan').addEventListener('click', () => ajukan(dipilih, total));
+
+  sembunyikanRel();
+  langkah(3);
+  el('kartuForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function gambarSK(sk){
+  if(!sk.butir || !sk.butir.length) return '';
+  return '<div class="sk" id="skPanel">' +
+      '<div class="kepala" id="skKepala">' +
+        '<span class="jd">\uD83D\uDCCB ' + esc(sk.judul || 'Syarat dan Ketentuan') + '</span>' +
+        '<span class="st" id="skStatus">Ketuk untuk membaca</span>' +
+        '<span class="pn">\u25BC</span>' +
+      '</div>' +
+      '<div class="isi"><ol>' +
+        sk.butir.map(x => '<li>' + esc(x) + '</li>').join('') +
+      '</ol>' +
+      (sk.versi ? '<div class="versi">Versi ' + esc(sk.versi) + '. Versi yang Anda setujui ikut tercatat pada pengajuan.</div>' : '') +
+      '</div></div>';
+}
+
+function pesanForm(t, j){
+  el('pesanForm').innerHTML = t ? '<div class="pesan p-' + j + '">' + t + '</div>' : '';
+}
+
+async function ajukan(dipilih, total){
+  const body = {
+    aksi: 'ajukan',
+    noWA: el('f_wa').value.trim(),
+    email: el('f_email').value.trim(),
+    nik: el('f_nik').value.trim(),
+    nim: el('f_nim').value.trim(),
+    beasiswaDiceklis: dipilih.map(d => d.no_beasiswa),
+    pernyataan: el('f_pernyataan').checked === true
+  };
+
+  if(!body.noWA){ pesanForm('Nomor WhatsApp belum diisi.', 'salah'); el('f_wa').focus(); return; }
+  if(!body.email || body.email.indexOf('@') < 1){ pesanForm('Email belum diisi dengan benar.', 'salah'); el('f_email').focus(); return; }
+  if(KONFIG.nikWajib && body.nik.replace(/\D/g,'').length !== Number(KONFIG.panjangNik)){
+    pesanForm('NIK harus ' + KONFIG.panjangNik + ' digit.', 'salah'); el('f_nik').focus(); return;
+  }
+  if(!body.pernyataan){ pesanForm('Pernyataan wajib dicentang.', 'salah'); return; }
+
+  const t = el('btnAjukan');
+  t.disabled = true; t.innerHTML = '<span class="spinner"></span>Menyimpan...';
+  pesanForm('');
+
+  try{
+    // Data disimpan lebih dulu, link WhatsApp dibuat dari data yang
+    // sudah tersimpan itu. Kalau dibalik, pengajuan yang batal dikirim
+    // di WhatsApp hilang tanpa jejak.
+    const r = await panggilPost(body);
+    if(!r || !r.success){
+      pesanForm(esc((r && r.error) || 'Pengajuan ditolak.'), 'salah');
+      t.disabled = false; t.textContent = 'Ajukan Sekarang \u2014 ' + rp(total);
+      return;
+    }
+    tampilkanSukses(r);
+  }catch(e){
+    pesanForm('Gagal terhubung. Data Anda belum tersimpan, silakan coba lagi.', 'salah');
+    t.disabled = false; t.textContent = 'Ajukan Sekarang \u2014 ' + rp(total);
+  }
+}
+
+function tampilkanSukses(r){
+  const waUrl = 'https://wa.me/' + r.wa_admin + '?text=' + encodeURIComponent(r.pesan_wa);
+  el('wadahHasil').innerHTML = '';
+  el('kartuCari').classList.add('sembunyi');
+
+  el('wadahForm').innerHTML =
+    '<div class="putih ok" style="text-align:center">' +
+      '<div style="font-size:2.6rem">\u2705</div>' +
+      '<h3>Pengajuan Tercatat</h3>' +
+      '<p class="ket">Data Anda sudah tersimpan di sistem. Simpan nomor tiket ini.</p>' +
+      '<div class="tiket">' + esc(r.id_pengajuan) + '</div>' +
+      '<a class="tbl-wa" id="tautanWa" href="' + waUrl + '" target="_blank" rel="noopener">' +
+        '<svg width="17" height="17" viewBox="0 0 24 24" fill="#fff"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24z"/></svg>' +
+        'Kirim Konfirmasi via WhatsApp</a>' +
+      '<p class="ket" style="margin-top:10px;font-size:.78rem">Pesannya sudah terisi otomatis. ' +
+        'Bila tidak dikirim pun, data Anda tetap tersimpan.</p>' +
+      '<div class="rincian" style="text-align:left;margin-top:17px">' +
+        '<div class="br"><span>Nama</span><b>' + esc(r.nama) + '</b></div>' +
+        '<div class="br"><span>Beasiswa diajukan</span><b>' + r.jumlah_beasiswa + '</b></div>' +
+        '<div class="br"><span>Status</span><b>' + esc(r.status) + '</b></div>' +
+        (r.versi_sk ? '<div class="br"><span>Syarat dan Ketentuan</span><b>Versi ' + esc(r.versi_sk) + '</b></div>' : '') +
+        '<div class="br tot"><span>Total diajukan</span><b>' + rp(r.total) + '</b></div>' +
+      '</div>' +
+      '<p class="ket" style="margin-top:15px;text-align:left">Langkah berikutnya: admin memverifikasi data Anda. ' +
+        'Status berjalan dari diajukan, diproses, lalu diterima atau ditolak.</p>' +
+    '</div>';
+
+  sembunyikanRel();
+  langkah(4);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  const a = el('tautanWa');
+  if(a){
+    a.addEventListener('click', () => {
+      try{
+        if(LEWAT_GS) google.script.run.apiCatatWa(r.id_pengajuan, a.href);
+        else fetch(WEB_APP_URL, { method:'POST',
+          headers:{ 'Content-Type':'text/plain;charset=utf-8' },
+          body: JSON.stringify({ aksi:'catatWa', id_pengajuan:r.id_pengajuan, tautan:a.href }) });
+      }catch(e){}
+    });
+    setTimeout(() => { window.open(a.href, '_blank'); }, 900);
+  }
+}
+
+/* ---------- bantuan WhatsApp ---------- */
+const pop = el('waPop');
+function bukaPop(teks){
+  if(teks) el('waBubble').textContent = teks;
+  pop.classList.add('show');
+}
+function tutupPop(){ pop.classList.remove('show'); }
+el('waFab').addEventListener('click', () => pop.classList.toggle('show'));
+el('waClose').addEventListener('click', tutupPop);
+setTimeout(() => { if(!HASIL) bukaPop(); }, 3000);
+setTimeout(() => { if(!HASIL) tutupPop(); }, 9000);
+
+el('btnCari').addEventListener('click', cari);
+el('q').addEventListener('keydown', e => { if(e.key === 'Enter') cari(); });
+el('btnLanjut').addEventListener('click', bukaForm);
+mulai();
+</script>
+</body>
+</html>
